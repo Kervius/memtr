@@ -1,0 +1,4 @@
+*.so
+*.o
+test*.out
+test1
