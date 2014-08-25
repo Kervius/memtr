@@ -1,5 +1,4 @@
 
-
 #define _GNU_SOURCE 1
 
 #include <stdlib.h>
@@ -22,6 +21,7 @@ typedef void *(*malloc_type)(size_t size);
 typedef void (*free_type)(void *ptr);
 typedef void *(*calloc_type)(size_t nmemb, size_t size);
 typedef void *(*realloc_type)(void *ptr, size_t size);
+
 
 static malloc_type orig_malloc;
 static free_type orig_free;
@@ -85,7 +85,7 @@ void itox(unsigned long i, char *b)
 
 static void memtr_print( const char *name, size_t size, void *ptr )
 {
-	static char buf1[128], buf2[32];
+	char buf1[128], buf2[32];
 	char *p;
 	int len;
 	if (is_on) {
