@@ -25,7 +25,7 @@ typedef void *(*realloc_type)(void *ptr, size_t size);
 
 static malloc_type orig_malloc;
 static free_type orig_free;
-//static calloc_type orig_calloc;
+static calloc_type orig_calloc;
 static realloc_type orig_realloc;
 
 
@@ -45,10 +45,10 @@ static void memtr_init()
 
 	orig_malloc = (malloc_type)dlsym( RTLD_NEXT, "malloc" );
 	orig_free = (free_type)dlsym( RTLD_NEXT, "free" );
-	//orig_calloc = (calloc_type)dlsym( RTLD_NEXT, "calloc" );
+	orig_calloc = (calloc_type)dlsym( RTLD_NEXT, "calloc" );
 	orig_realloc = (realloc_type)dlsym( RTLD_NEXT, "realloc" );
 
-	if (orig_malloc && orig_free && orig_realloc && memtr_fd >= 0) {
+	if (orig_malloc && orig_free && orig_realloc && orig_calloc && memtr_fd >= 0) {
 		is_on = 1;
 	}
 }
@@ -118,12 +118,10 @@ static void memtr_print( const char *name, size_t size, void *ptr )
 void *malloc(size_t size)
 {
 	void *p;
-
 	memtr_init();
 	memtr_print( "m<", size, 0 );
 	p = orig_malloc( size );
 	memtr_print( "m>", size, p );
-
 	return p;
 }
 
@@ -135,10 +133,16 @@ void free(void *ptr)
 	memtr_print( "f>", 0, ptr );
 }
 
-/*
+
 void *calloc(size_t nmemb, size_t size)
 {
-}*/
+	void *p;
+	memtr_init();
+	memtr_print( "c<", nmemb*size, 0 );
+	p = orig_calloc( nmemb, size );
+	memtr_print( "c>", nmemb*size, p );
+	return p;
+}
 
 void *realloc(void *ptr, size_t size)
 {

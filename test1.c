@@ -9,5 +9,7 @@ int main(int argc, char **argv)
 	p = malloc( 1024 );
 	p = realloc( p, 2048 );
 	free( p );
+	p = calloc( 2, 2 );
+	free( p );
 	return 0;
 }
